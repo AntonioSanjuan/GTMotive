@@ -1,0 +1,11 @@
+@use '../../../colors.scss';
+
+.Header_MainContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    background-color: #ffff;
+    height: 60px;
+}

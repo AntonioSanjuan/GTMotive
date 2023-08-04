@@ -1,0 +1,21 @@
+.BrandListFilter_MainContainer {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    align-items: center;
+    background-color: #616161;
+    .BrandListFilter_FilterContainer {
+        width: 80%;
+
+    }
+    .BrandListFilter_ActionsContainer {
+        position: relative;
+    
+        button {
+            position: absolute;
+            bottom: -20px;
+            right: calc(50% - 20px);
+        }
+    
+    }
+}

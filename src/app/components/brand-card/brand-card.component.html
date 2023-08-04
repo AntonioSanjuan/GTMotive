@@ -1,0 +1,9 @@
+<div class="BrandCard_MainContainer">
+  <div class="BrandCard_Image">
+    <img mat-card-image alt="Brand photo">
+  </div>
+  <div class="BrandCard_Info">
+    <p id="brandNumber" appSkeleton [active]="false" [width]="'70px'" [height]="'8px'">ID: {{brand?.mfr_ID}}</p>
+    <p id="brandName" appSkeleton [active]="false" [width]="'90px'" [height]="'20px'">{{brand?.mfr_Name}}</p>
+  </div>
+</div>

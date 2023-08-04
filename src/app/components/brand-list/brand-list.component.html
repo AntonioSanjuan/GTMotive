@@ -1,0 +1,24 @@
+<div class="BrandList_MainContainer">
+    <div class="BrandList_Container">
+        <div class="BrandList_Header">
+        </div>
+        <div class="BrandList_Filter">
+            <app-brand-list-filter></app-brand-list-filter>
+        </div>
+
+        <div class="BrandList_ContentContainer"
+            appIntersectionObserver 
+            (isIntersecting)="isIntersecting($event)"
+            [offset]="50"
+            [active]="!(useBrands.loading$ | async)">
+            <p *ngIf="(useBrands.loading$ | async)">loading</p>
+
+            <div  class="BrandList_List" 
+                *ngFor="let brand of (useBrands.brands$ | async)?.results"
+            >
+                <app-brand-card [brand]="brand"></app-brand-card>
+            </div>
+
+        </div>
+    </div>
+</div>
