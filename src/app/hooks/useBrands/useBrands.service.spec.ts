@@ -10,6 +10,8 @@ import { addBrandsAction, setBrandsAction } from 'src/app/store/data/data.action
 import { VpicApiService } from 'src/app/services/vpic-api/vpic-api.service';
 import { VpicApiServiceMock } from 'src/app/services/vpic-api/vpic-api.service.mock';
 import { IBrands } from 'src/app/models/internals/vpic/brands.model';
+import { IModels } from 'src/app/models/internals/vpic/models.model';
+import { IBrand } from 'src/app/models/internals/vpic/brand.model';
 
 @Component({})
 class DummyComponent {
@@ -153,7 +155,7 @@ describe('UseBrands', () => {
     const getBrandsSpy = jest.spyOn(VpicApiServiceMock, 'getBrands').mockReturnValue(of(fetchedBrands))
     const dispatchSpy = jest.spyOn(store, 'dispatch')
     
-    component.useBrands.fetchNextBrands();
+    component.useBrands.fetchNextBrandsPage();
 
     component.useBrands.brands$.pipe(take(5)).subscribe((brands: IBrands | undefined) => {
       expect(getBrandsSpy).toHaveBeenCalledWith(sutStoredBrandsPage + 1)
@@ -161,5 +163,146 @@ describe('UseBrands', () => {
       done()
     })
   });
+
+  //to-do
+  it('prefetchBrandById should fetch from storage if it exists', (done) => {
+    //set storage
+    const brandIdSut = 123
+    const storedBrands = {
+      currentPage: 1,
+      results: [
+        {
+          mfr_ID: brandIdSut
+        },
+        {
+          mfr_ID: 0
+        }
+      ]
+    } as IBrands;
+
+    const getBrandsByIdSpy = jest.spyOn(VpicApiServiceMock, 'getBrandsById')
+
+
+    store.overrideSelector(selectBrands, storedBrands);
+    store.refreshState();
+    fixture.detectChanges()
+
+    component.useBrands.prefetchBrandById(brandIdSut).pipe(take(1)).subscribe((brands: IBrands | undefined) => {
+      expect(brands).toBe(storedBrands);
+      expect(getBrandsByIdSpy).not.toHaveBeenCalled()
+
+      done()
+    })
+
+  });
+
+  it('prefetchBrandById should fetch from service if doesnt exists in the storage', (done) => {
+    //set storage
+    const brandIdSut = 123
+    const storedBrands = {
+      currentPage: 1,
+      results: [
+        {
+          mfr_ID: 0
+        },
+        {
+          mfr_ID: 1
+        }
+      ]
+    } as IBrands;
+
+    const getBrandsByIdSpy = jest.spyOn(VpicApiServiceMock, 'getBrandsById')
+
+
+    store.overrideSelector(selectBrands, storedBrands);
+    store.refreshState();
+    fixture.detectChanges()
+
+    component.useBrands.prefetchBrandById(brandIdSut).pipe(take(1)).subscribe((brands: IBrands | undefined) => {
+      expect(getBrandsByIdSpy).toHaveBeenCalled()
+
+      done()
+    })
+  });
+
+  it('fetchBrandDetails should fetch from storage if exists', (done) => {
+    //set storage
+    const brandIdSut = 123
+    const storedBrands = {
+      currentPage: 1,
+      results: [
+        {
+          mfr_ID: 0
+        },
+        {
+          mfr_ID: brandIdSut,
+          models: {
+            data: [
+              {
+                make_ID: 0,
+                make_Name: 'make_NameTest0',
+                model_ID: 0,
+                model_Name: 'model_NameTest0'
+              }
+            ]
+          }
+        }
+      ]
+    } as IBrands;
+
+    const getBrandsDetailsSpy = jest.spyOn(VpicApiServiceMock, 'getBrandDetails')
+
+
+    store.overrideSelector(selectBrands, storedBrands);
+    store.refreshState();
+    fixture.detectChanges()
+
+    component.useBrands.fetchBrandDetails(brandIdSut).pipe(take(1)).subscribe((models: IModels) => {
+      expect(getBrandsDetailsSpy).not.toHaveBeenCalled()
+
+      done()
+    })
+  });
+
+  it('fetchBrandDetails should fetch from service if doesnt exists in the storage', (done) => {
+    //set storage
+    const brandIdSut = 123
+    const brandModelSut = {
+      data: [
+        {
+          make_ID: 0,
+          make_Name: 'make_NameTest0',
+          model_ID: 0,
+          model_Name: 'model_NameTest0'
+        }
+      ]
+    }
+    const storedBrands = {
+      currentPage: 1,
+      results: [
+        {
+          mfr_ID: 0
+        },
+        {
+          mfr_ID: 1,
+          models: brandModelSut
+        }
+      ]
+    } as IBrands;
+
+    const getBrandsDetailsSpy = jest.spyOn(VpicApiServiceMock, 'getBrandDetails')
+
+
+    store.overrideSelector(selectBrands, storedBrands);
+    store.refreshState();
+    fixture.detectChanges()
+
+    component.useBrands.fetchBrandDetails(brandIdSut).pipe(take(1)).subscribe((models: IModels) => {
+      expect(getBrandsDetailsSpy).toHaveBeenCalled()
+
+      done()
+    })
+  });
+  
 });
 

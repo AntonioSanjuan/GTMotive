@@ -11,7 +11,7 @@ export class BrandListComponent {
 
   public isIntersecting(intersecting: boolean) {
     if(intersecting) {
-      this.useBrands.fetchNextBrands()
+      this.useBrands.fetchNextBrandsPage()
     }
   }
 }

@@ -4,10 +4,8 @@ import { map, switchMap } from 'rxjs/operators';
 import { Observable, forkJoin } from 'rxjs';
 
 import { BrandsDto } from 'src/app/models/dtos/vpic/brandsDto.model';
-import { BrandAdapter, BrandTypesAdapter, BrandsAdapter, ModelsAdapter } from 'src/app/adapters/vpic/vpic.adapter';
+import { BrandAdapter, BrandsAdapter, ModelsAdapter } from 'src/app/adapters/vpic/vpic.adapter';
 import { IBrands } from 'src/app/models/internals/vpic/brands.model';
-import { IBrandTypes } from 'src/app/models/internals/vpic/brandTypes.model';
-import { BrandTypesDto } from 'src/app/models/dtos/vpic/brandTypesDto.model';
 import { MakesDto } from 'src/app/models/dtos/vpic/makesDto.model';
 import { MakeDto } from 'src/app/models/dtos/vpic/makeDto.model';
 import { ModelsDto } from 'src/app/models/dtos/vpic/modelsDto.model';
@@ -21,7 +19,6 @@ export class VpicApiService {
     private brandAdapt: BrandAdapter,
     private brandsAdapt: BrandsAdapter,
     private modelsAdapt: ModelsAdapter,
-    private brandTypesAdapt: BrandTypesAdapter,
     ) {}
 
   private getRawBrands(page: number): Observable<BrandsDto> {
@@ -40,17 +37,6 @@ export class VpicApiService {
     return this.http.get<ModelsDto>(`https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMake/${makeName}?format=json`)
   }
 
-  private getRawBrandTypes(): Observable<BrandTypesDto> {
-    return this.http.get<BrandTypesDto>(`https://vpic.nhtsa.dot.gov/api/vehicles/getvehiclevariablevalueslist/Manufacture?format=json`)
-  }
-
-  public getBrandTypes(): Observable<IBrandTypes> {
-    return this.getRawBrandTypes().pipe(
-      map((brandTypes: BrandTypesDto) => {
-        return this.brandTypesAdapt.adapt(brandTypes)
-      })
-    )
-  }
   public getBrandsById(brandId: number): Observable<IBrands> {
     return this.getRawBrandsById(brandId).pipe(
       map((data: BrandsDto) => {

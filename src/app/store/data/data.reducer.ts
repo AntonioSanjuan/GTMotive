@@ -1,7 +1,7 @@
 import { createReducer, on } from '@ngrx/store';
 import { DataState } from './models/data.state';
 import { appDataInitialState } from './models/data.initialState';
-import { addBrandsAction, setBrandDetailsAction, setBrandTypesAction, setBrandsAction } from './data.actions';
+import { addBrandsAction, setBrandDetailsAction, setBrandsAction } from './data.actions';
 import { IBrand } from 'src/app/models/internals/vpic/brand.model';
 import { IBrands } from 'src/app/models/internals/vpic/brands.model';
 
@@ -25,12 +25,6 @@ export const DataReducer = createReducer<DataState>(
           : [...action.results]
       },
     };
-  }),
-  on(setBrandTypesAction, (state, action): DataState => {
-    return {
-      ...state,
-      brandTypes: action
-    }
   }),
   on(setBrandDetailsAction, (state, action): DataState => {
     const updatedBrandsResults: IBrand[] = state.brands?.results ? 

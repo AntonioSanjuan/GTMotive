@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { VpicApiService } from './vpic-api.service';
-import { BrandAdapter, BrandTypesAdapter, BrandsAdapter, ModelsAdapter } from 'src/app/adapters/vpic/vpic.adapter';
+import { BrandAdapter, BrandsAdapter, ModelsAdapter } from 'src/app/adapters/vpic/vpic.adapter';
 
-const adapters = [BrandAdapter, BrandsAdapter, ModelsAdapter, BrandTypesAdapter]
+const adapters = [BrandAdapter, BrandsAdapter, ModelsAdapter]
 
 @NgModule({
   declarations: [],

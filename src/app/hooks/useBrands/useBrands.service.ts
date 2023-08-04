@@ -60,7 +60,7 @@ export class UseBrands {
     )
   }
 
-  public fetchNextBrands(): void {
+  public fetchNextBrandsPage(): void {
     this.loadingObj.next(true);
 
     this.fetchFromService(this.getNextPage()).pipe(
@@ -85,7 +85,7 @@ export class UseBrands {
   public prefetchBrandById(brandId: number): Observable<IBrands | undefined> {
     this.loadingObj.next(true)
 
-    return (!!this.getStoredBrands()
+    return (!!this.getStoredBrand(brandId)
     ? this.fetchFromStore() 
     : this.fetchByIdFromService(brandId).pipe(
       tap((brands: IBrands | undefined) => {
