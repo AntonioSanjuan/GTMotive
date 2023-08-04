@@ -11,12 +11,17 @@ import { BrandListFilterComponent } from 'src/app/components/brand-list-filter/b
 import { UseBrandsModule } from 'src/app/hooks/useBrands/useBrands.service.module';
 import { UseBrands } from 'src/app/hooks/useBrands/useBrands.service';
 import { UseBrandTypes } from 'src/app/hooks/useBrandTypes/useBrandTypes.service';
+import { BrandComponent } from '../brand/brand.component';
+import { brandDetailsResolver } from '../brand/brand.component.resolver';
 
-const routes: Routes = [{ path: '', component: HomeComponent, providers: [UseBrands, UseBrandTypes], resolve: {brandsResolver: homeResolver}}];
+const routes: Routes = [
+  { path: '', component: HomeComponent, providers: [UseBrands, UseBrandTypes], resolve: {brandsResolver: homeResolver}},
+  { path: ':id', component: BrandComponent, providers: [UseBrands], resolve: {brandDetailsResolver: brandDetailsResolver}}
+];
 const directives = [SkeletonDirective, IntersectionObserverDirective]
 
 @NgModule({
-  declarations: [HomeComponent, BrandListComponent, BrandListFilterComponent, BrandCardComponent, ...directives],
+  declarations: [HomeComponent, BrandComponent, BrandListComponent, BrandListFilterComponent, BrandCardComponent, ...directives],
   providers: [],
   imports: [
     SharedModule,

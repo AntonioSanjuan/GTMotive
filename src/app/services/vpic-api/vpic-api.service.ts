@@ -1,13 +1,17 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { map } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
+import { Observable, forkJoin } from 'rxjs';
 
 import { BrandsDto } from 'src/app/models/dtos/vpic/brandsDto.model';
-import { BrandAdapter, BrandTypesAdapter, BrandsAdapter } from 'src/app/adapters/vpic/vpic.adapter';
+import { BrandAdapter, BrandTypesAdapter, BrandsAdapter, ModelsAdapter } from 'src/app/adapters/vpic/vpic.adapter';
 import { IBrands } from 'src/app/models/internals/vpic/brands.model';
 import { IBrandTypes } from 'src/app/models/internals/vpic/brandTypes.model';
 import { BrandTypesDto } from 'src/app/models/dtos/vpic/brandTypesDto.model';
+import { MakesDto } from 'src/app/models/dtos/vpic/makesDto.model';
+import { MakeDto } from 'src/app/models/dtos/vpic/makeDto.model';
+import { ModelsDto } from 'src/app/models/dtos/vpic/modelsDto.model';
+import { IModels } from 'src/app/models/internals/vpic/models.model';
 
 @Injectable()
 export class VpicApiService {
@@ -16,11 +20,20 @@ export class VpicApiService {
     private http: HttpClient,
     private brandAdapt: BrandAdapter,
     private brandsAdapt: BrandsAdapter,
+    private modelsAdapt: ModelsAdapter,
     private brandTypesAdapt: BrandTypesAdapter,
     ) {}
 
   private getRawBrands(page: number): Observable<BrandsDto> {
     return this.http.get<BrandsDto>(`https://vpic.nhtsa.dot.gov/api/vehicles/getallmanufacturers?format=json&page=${page}`)
+  }
+
+  private getRawBrandMakes(brandId: number): Observable<MakesDto> {
+    return this.http.get<MakesDto>(`https://vpic.nhtsa.dot.gov/api/vehicles/GetMakeForManufacturer/${brandId}?format=json`)
+  }
+
+  private getRawMakeModels(makeName: string): Observable<ModelsDto> {
+    return this.http.get<ModelsDto>(`https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMake/${makeName}?format=json`)
   }
 
   private getRawBrandTypes(): Observable<BrandTypesDto> {
@@ -46,6 +59,29 @@ export class VpicApiService {
         )
         return output
       }),
+    )
+  }
+
+  public getBrandDetails(brandId: number): Observable<IModels> {
+    return this.getRawBrandMakes(brandId).pipe(
+      switchMap((makes: MakesDto) => {
+        console.log("makes", makes)
+        const requests = makes.Results
+            .map((make: MakeDto) => 
+                this.getRawMakeModels(make.Make_Name)
+            )
+        return forkJoin<ModelsDto[]>(requests)
+    }),
+    map((models: ModelsDto[]) => {
+      const modelsToAdapt = models.map((models) => {return models.Results}).flat()
+        const output = this.modelsAdapt.adapt(
+          {
+            results: modelsToAdapt
+          }
+        )
+        console.log("output", output)
+        return output;
+    })
     )
   }
 }

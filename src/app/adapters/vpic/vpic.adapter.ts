@@ -6,6 +6,10 @@ import { Brands, IBrands } from "src/app/models/internals/vpic/brands.model";
 import { BrandTypesDto } from "src/app/models/dtos/vpic/brandTypesDto.model";
 import { BrandType, BrandTypes, IBrandTypes } from "src/app/models/internals/vpic/brandTypes.model";
 import { BrandTypeDto } from "src/app/models/dtos/vpic/brandTypeDto.model";
+import { IModels, Models } from "src/app/models/internals/vpic/models.model";
+import { IModel } from "src/app/models/internals/vpic/model.model copy";
+import { ModelsDto } from "src/app/models/dtos/vpic/modelsDto.model";
+import { ModelDto } from "src/app/models/dtos/vpic/modelDto.model";
 
 export class BrandAdapter implements Adapter<IBrand> {
     adapt(brand: BrandDto): IBrand {
@@ -30,6 +34,14 @@ export class BrandsAdapter implements Adapter<IBrands> {
             brands.SearchCriteria,
             results
         )
+    }
+}
+
+export class ModelsAdapter implements Adapter<IModels> {
+    adapt(
+        {results}: 
+        {results: ModelDto[]}): IModels {
+        return new Models(results)
     }
 }
 

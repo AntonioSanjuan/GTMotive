@@ -83,4 +83,10 @@ export class UseBrands {
       })  
     )
   }
+
+  public fetchBrandDetails(brandId: number): Observable<any> {
+    return this.vpicService.getBrandDetails(brandId).pipe(
+      take(1),
+    )
+  }
 }
