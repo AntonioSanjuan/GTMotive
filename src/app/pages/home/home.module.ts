@@ -16,7 +16,7 @@ import { brandDetailsResolver } from '../brand/brand.component.resolver';
 
 const routes: Routes = [
   { path: '', component: HomeComponent, providers: [UseBrands, UseBrandTypes], resolve: {brandsResolver: homeResolver}},
-  { path: ':id', component: BrandComponent, providers: [UseBrands], resolve: {brandDetailsResolver: brandDetailsResolver}}
+  { path: ':id', component: BrandComponent, providers: [UseBrands, UseBrandTypes], resolve: {brandsResolver: homeResolver, brandDetailsResolver: brandDetailsResolver}},
 ];
 const directives = [SkeletonDirective, IntersectionObserverDirective]
 

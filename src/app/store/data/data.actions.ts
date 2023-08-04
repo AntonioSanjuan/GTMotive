@@ -1,10 +1,12 @@
 import { createAction, props } from '@ngrx/store';
 import { IBrandTypes } from 'src/app/models/internals/vpic/brandTypes.model';
 import { IBrands } from 'src/app/models/internals/vpic/brands.model';
+import { IModels } from 'src/app/models/internals/vpic/models.model';
 
 export enum DataActionTypes {
   SetBrands = '[Data] Set Brands Data',
   AddBrands = '[Data] Add Brands Data',
+  AddBrandDetails = '[Data] Add Brands Details Data',
   SetBrandTypes = '[Data] Set BrandTypes Data',
 
 
@@ -24,4 +26,12 @@ export const addBrandsAction = createAction(
 export const setBrandTypesAction = createAction(
   DataActionTypes.SetBrandTypes,
   props<IBrandTypes>()
+)
+
+export const setBrandDetailsAction = createAction(
+  DataActionTypes.AddBrandDetails,
+  props<{
+    brandId: number
+    brandDetails: IModels
+  }>()
 )
