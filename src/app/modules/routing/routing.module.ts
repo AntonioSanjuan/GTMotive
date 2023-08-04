@@ -19,4 +19,4 @@ const routes: Routes = [
   }
 ];
 
-export const APP_ROUTES = RouterModule.forRoot(routes);
+export const APP_ROUTES = RouterModule.forRoot(routes, { scrollPositionRestoration: 'top' });

@@ -1,5 +1,30 @@
 <div class="Brand_MainContainer">
     <section>
-        <p>hola soy Brand page</p>
+        <div class="Brand_Container">
+            <div>
+                <h1>{{(brand$ | async)?.mfr_Name}}</h1>
+                <p>ID: {{(brand$ | async)?.mfr_ID}}</p>
+
+                <div class="Brand_Info">
+                    <div class="Brand_VehicleTypesContainer">
+                        <h3>Vehicle Types:</h3>
+                        <ul class="Brand_VehicleType"
+                            *ngFor="let vehicleType of (brand$ | async)?.vehicleTypes"
+                        >
+                            <li>{{vehicleType.Name}}</li>
+                        </ul>
+                    </div>
+    
+                    <div class="Brand_BrandModelsContainer">
+                        <h3>Brand Models:</h3>
+                        <ul class="Brand_VehicleType"
+                            *ngFor="let model of (brand$ | async)?.models?.data"
+                        >
+                            <li>{{model.model_Name}}</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 </div>

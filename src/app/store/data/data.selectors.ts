@@ -15,3 +15,8 @@ export const selectBrandTypes = createSelector(
   selectDataState,
   (state) => state.brandTypes
 );
+
+export const selectBrandById = (brandId: number) => createSelector(
+  selectDataState,
+  (state: DataState) => state.brands?.results.find((brand) => {return brand.mfr_ID === brandId})
+);

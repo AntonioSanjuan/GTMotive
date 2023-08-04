@@ -11,8 +11,6 @@
             (isIntersecting)="isIntersecting($event)"
             [offset]="50"
             [active]="!(useBrands.loading$ | async)">
-            <p *ngIf="(useBrands.loading$ | async)">loading</p>
-
             <div  class="BrandList_List" 
                 *ngFor="let brand of (useBrands.brands$ | async)?.results"
             >

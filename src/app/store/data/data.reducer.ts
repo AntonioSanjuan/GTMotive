@@ -33,7 +33,6 @@ export const DataReducer = createReducer<DataState>(
     }
   }),
   on(setBrandDetailsAction, (state, action): DataState => {
-    console.log("action", state.brands?.results)
     const updatedBrandsResults: IBrand[] = state.brands?.results ? 
     [
       ...state.brands?.results?.map((brand: IBrand) => {
@@ -50,7 +49,6 @@ export const DataReducer = createReducer<DataState>(
     : 
     [...state.brands?.results as Array<IBrand>]
 
-    console.log("updatedBrandsResults", updatedBrandsResults)
     return {
       ...state,
       brands: {

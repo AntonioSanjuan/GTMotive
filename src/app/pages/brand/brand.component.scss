@@ -5,8 +5,53 @@
 .Brand_MainContainer {
     display: flex;
     width: 100%;
+    height: 100%;
 
     section {
         width: 100%;
+
+        .Brand_Container {
+            display: flex;
+            height: 100%;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            background: #fff url(https://assets.pokemon.com/static2/_ui/img/chrome/container_bg.png);
+            position: relative;
+
+            > div {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding: 60px 20px;
+                background-color: white;
+                height: 100%;
+                gap: 20px;
+                width: 80%;
+
+                .Brand_Info {
+                    display: flex;
+                    width: 100%;
+
+                    .Brand_VehicleTypesContainer,
+                    .Brand_BrandModelsContainer {
+                        width: 100%;
+                        display: flex;
+                        flex-direction: column;
+                    }
+
+                    .Brand_VehicleTypesContainer {
+                        > h3 {
+                            text-decoration: underline;
+                        }
+                    }
+    
+                    .Brand_BrandModelsContainer {
+    
+                    }
+                }
+ 
+            }
+        }
     }
 }

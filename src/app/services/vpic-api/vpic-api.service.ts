@@ -28,6 +28,10 @@ export class VpicApiService {
     return this.http.get<BrandsDto>(`https://vpic.nhtsa.dot.gov/api/vehicles/getallmanufacturers?format=json&page=${page}`)
   }
 
+  private getRawBrandsById(brandId: number): Observable<BrandsDto> {
+    return this.http.get<BrandsDto>(`https://vpic.nhtsa.dot.gov/api/vehicles/getmanufacturerdetails/${brandId}?format=json`)
+  }
+
   private getRawBrandMakes(brandId: number): Observable<MakesDto> {
     return this.http.get<MakesDto>(`https://vpic.nhtsa.dot.gov/api/vehicles/GetMakeForManufacturer/${brandId}?format=json`)
   }
@@ -45,6 +49,20 @@ export class VpicApiService {
       map((brandTypes: BrandTypesDto) => {
         return this.brandTypesAdapt.adapt(brandTypes)
       })
+    )
+  }
+  public getBrandsById(brandId: number): Observable<IBrands> {
+    return this.getRawBrandsById(brandId).pipe(
+      map((data: BrandsDto) => {
+        const output = this.brandsAdapt.adapt(
+          {
+            page: 0,
+            brands: data, 
+            results: data.Results.map((result) => { return this.brandAdapt.adapt(result)})
+          }
+        )
+        return output
+      }),
     )
   }
   public getBrands(page: number): Observable<IBrands> {
@@ -65,7 +83,6 @@ export class VpicApiService {
   public getBrandDetails(brandId: number): Observable<IModels> {
     return this.getRawBrandMakes(brandId).pipe(
       switchMap((makes: MakesDto) => {
-        console.log("makes", makes)
         const requests = makes.Results
             .map((make: MakeDto) => 
                 this.getRawMakeModels(make.Make_Name)
@@ -79,7 +96,6 @@ export class VpicApiService {
             results: modelsToAdapt
           }
         )
-        console.log("output", output)
         return output;
     })
     )
