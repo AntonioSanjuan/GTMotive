@@ -17,7 +17,6 @@ export class BrandListComponent implements OnInit {
 
   ngOnInit(): void {
     this.useBrands.searchCriteria$.subscribe((asd) => {
-      console.log("asd", asd)
     })
   }
 }
