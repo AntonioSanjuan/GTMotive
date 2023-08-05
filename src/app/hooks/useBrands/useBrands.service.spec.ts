@@ -86,7 +86,7 @@ describe('UseBrands', () => {
     })
   });
 
-  it('prefetchBrands should fetch from storage if it exists', (done) => {
+  it('getBrands should fetch from storage if it exists', (done) => {
     //set storage
     const storedBrands = {
       currentPage: 1,
@@ -102,7 +102,7 @@ describe('UseBrands', () => {
     store.refreshState();
     fixture.detectChanges()
 
-    component.useBrands.prefetchBrands().pipe(take(1)).subscribe((brands: IBrands | undefined) => {
+    component.useBrands.getBrands().pipe(take(1)).subscribe((brands: IBrands | undefined) => {
       expect(brands).toBe(storedBrands);
       expect(getBrandsSpy).not.toHaveBeenCalled()
 
@@ -111,7 +111,7 @@ describe('UseBrands', () => {
 
   });
 
-  it('prefetchBrands should fetch from service & store it, if doesnt exists stored brands', (done) => {
+  it('getBrands should fetch from service & store it, if doesnt exists stored brands', (done) => {
     //set storage
     const fetchedBrands = {
       currentPage: 0,
@@ -123,7 +123,7 @@ describe('UseBrands', () => {
     const getBrandsSpy = jest.spyOn(VpicApiServiceMock, 'getBrands').mockReturnValue(of(fetchedBrands))
     const dispatchSpy = jest.spyOn(store, 'dispatch')
 
-    component.useBrands.prefetchBrands().pipe(take(1)).subscribe((brands: IBrands | undefined) => {
+    component.useBrands.getBrands().pipe(take(1)).subscribe((brands: IBrands | undefined) => {
       expect(brands).toBe(fetchedBrands);
       expect(getBrandsSpy).toHaveBeenCalledWith(1)
       expect(dispatchSpy).toHaveBeenCalledWith(setBrandsAction(fetchedBrands))
@@ -155,7 +155,7 @@ describe('UseBrands', () => {
     const getBrandsSpy = jest.spyOn(VpicApiServiceMock, 'getBrands').mockReturnValue(of(fetchedBrands))
     const dispatchSpy = jest.spyOn(store, 'dispatch')
     
-    component.useBrands.fetchNextBrandsPage();
+    component.useBrands.getNextBrandsPage();
 
     component.useBrands.brands$.pipe(take(5)).subscribe((brands: IBrands | undefined) => {
       expect(getBrandsSpy).toHaveBeenCalledWith(sutStoredBrandsPage + 1)
@@ -165,7 +165,7 @@ describe('UseBrands', () => {
   });
 
   //to-do
-  it('prefetchBrandById should fetch from storage if it exists', (done) => {
+  it('getBrandsById should fetch from storage if it exists', (done) => {
     //set storage
     const brandIdSut = 123
     const storedBrands = {
@@ -187,7 +187,7 @@ describe('UseBrands', () => {
     store.refreshState();
     fixture.detectChanges()
 
-    component.useBrands.prefetchBrandById(brandIdSut).pipe(take(1)).subscribe((brands: IBrands | undefined) => {
+    component.useBrands.getBrandsById(brandIdSut).pipe(take(1)).subscribe((brands: IBrands | undefined) => {
       expect(brands).toBe(storedBrands);
       expect(getBrandsByIdSpy).not.toHaveBeenCalled()
 
@@ -196,7 +196,7 @@ describe('UseBrands', () => {
 
   });
 
-  it('prefetchBrandById should fetch from service if doesnt exists in the storage', (done) => {
+  it('getBrandsById should fetch from service if doesnt exists in the storage', (done) => {
     //set storage
     const brandIdSut = 123
     const storedBrands = {
@@ -218,14 +218,14 @@ describe('UseBrands', () => {
     store.refreshState();
     fixture.detectChanges()
 
-    component.useBrands.prefetchBrandById(brandIdSut).pipe(take(1)).subscribe((brands: IBrands | undefined) => {
+    component.useBrands.getBrandsById(brandIdSut).pipe(take(1)).subscribe((brands: IBrands | undefined) => {
       expect(getBrandsByIdSpy).toHaveBeenCalled()
 
       done()
     })
   });
 
-  it('fetchBrandDetails should fetch from storage if exists', (done) => {
+  it('getBrandDetails should fetch from storage if exists', (done) => {
     //set storage
     const brandIdSut = 123
     const storedBrands = {
@@ -257,14 +257,14 @@ describe('UseBrands', () => {
     store.refreshState();
     fixture.detectChanges()
 
-    component.useBrands.fetchBrandDetails(brandIdSut).pipe(take(1)).subscribe((models: IModels) => {
+    component.useBrands.getBrandDetails(brandIdSut).pipe(take(1)).subscribe((models: IModels) => {
       expect(getBrandsDetailsSpy).not.toHaveBeenCalled()
 
       done()
     })
   });
 
-  it('fetchBrandDetails should fetch from service if doesnt exists in the storage', (done) => {
+  it('getBrandDetails should fetch from service if doesnt exists in the storage', (done) => {
     //set storage
     const brandIdSut = 123
     const brandModelSut = {
@@ -297,7 +297,7 @@ describe('UseBrands', () => {
     store.refreshState();
     fixture.detectChanges()
 
-    component.useBrands.fetchBrandDetails(brandIdSut).pipe(take(1)).subscribe((models: IModels) => {
+    component.useBrands.getBrandDetails(brandIdSut).pipe(take(1)).subscribe((models: IModels) => {
       expect(getBrandsDetailsSpy).toHaveBeenCalled()
 
       done()

@@ -16,5 +16,5 @@ export const homeResolver: ResolveFn<any> =
         useBrands: UseBrands = inject(UseBrands),
 
     ): Observable<IBrands | undefined> => {
-        return useBrands.prefetchBrands()
+        return useBrands.getBrands()
     };

@@ -20,6 +20,7 @@ export const DataReducer = createReducer<DataState>(
       ...state,
       brands: {
         ...action,
+        count: (state.brands?.count || 0) + action.count,
         results: state.brands?.results
           ? [...state.brands?.results, ...action.results]
           : [...action.results]

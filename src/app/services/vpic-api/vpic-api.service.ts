@@ -37,14 +37,15 @@ export class VpicApiService {
     return this.http.get<ModelsDto>(`https://vpic.nhtsa.dot.gov/api/vehicles/GetModelsForMake/${makeName}?format=json`)
   }
 
-  public getBrandsById(brandId: number): Observable<IBrands> {
+  public getBrandsById(brandId: number, saveCriteria: boolean): Observable<IBrands> {
     return this.getRawBrandsById(brandId).pipe(
       map((data: BrandsDto) => {
         const output = this.brandsAdapt.adapt(
           {
             page: 0,
             brands: data, 
-            results: data.Results.map((result) => { return this.brandAdapt.adapt(result)})
+            results: data.Results.map((result) => { return this.brandAdapt.adapt(result)}),
+            searchCriteria: saveCriteria ? brandId : undefined
           }
         )
         return output
@@ -58,7 +59,7 @@ export class VpicApiService {
           {
             page: page,
             brands: data, 
-            results: data.Results.map((result) => { return this.brandAdapt.adapt(result)})
+            results: data.Results.map((result) => { return this.brandAdapt.adapt(result)}),
           }
         )
         return output

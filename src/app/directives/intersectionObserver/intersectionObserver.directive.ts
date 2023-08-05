@@ -12,24 +12,34 @@ import {
   @Directive({
     selector: '[appIntersectionObserver]',
   })
-  export class IntersectionObserverDirective implements OnInit, OnDestroy {
-    @Input() offset: number = 0;
+  export class IntersectionObserverDirective implements OnDestroy {
+    private shouldEmit: boolean = false
 
-    @Input() active = false
+    @Input() offset: number = 0;
+    @Input() set active(value: boolean) {
+      if (value && !this.subscription) {
+        this.subscription = this.createAndObserve();
+      } else if (!value && this.subscription) {
+        this.subscription.unsubscribe();
+        this.subscription = undefined;
+      }
+
+      this.shouldEmit = value
+
+   }
     @Output() isIntersecting = new EventEmitter<boolean>()
   
+    
     public _isIntersecting: boolean = false
-    public subscription!: Subscription
+    public subscription?: Subscription
   
     constructor (private element: ElementRef<Element>) {
     }
   
-    ngOnInit () {
-      this.subscription = this.createAndObserve()
-    }
-  
     ngOnDestroy () {
-      this.subscription.unsubscribe()
+      if(this.subscription) {
+        this.subscription.unsubscribe()
+      }
     }
   
     createAndObserve () {
@@ -41,15 +51,15 @@ import {
       }
   
       return new Observable<boolean>(subscriber => {
-
         const intersectionObserver = new IntersectionObserver(entries => {
 
           const { isIntersecting } = entries[0]
-          subscriber.next(isIntersecting)
-  
-          isIntersecting &&
-            !this.active &&
-            intersectionObserver.disconnect()
+          if (isIntersecting && this.shouldEmit) {
+            subscriber.next(true);
+          } else {
+            subscriber.next(false);
+            intersectionObserver.disconnect();
+          }
         }, options)
   
         intersectionObserver.observe(this.element.nativeElement)

@@ -10,9 +10,9 @@ export const brandDetailsResolver: ResolveFn<any> =
         useBrands: UseBrands = inject(UseBrands),
     ): Observable<any> => {
         const brandId = route.paramMap.get('id')
-        return useBrands.prefetchBrandById(Number(brandId)).pipe(
+        return useBrands.getBrandsById(Number(brandId)).pipe(
             switchMap((brands) => {
-                return useBrands.fetchBrandDetails(Number(brandId))
+                return useBrands.getBrandDetails(Number(brandId))
             })
         )
     };

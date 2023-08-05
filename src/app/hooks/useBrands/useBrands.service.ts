@@ -14,12 +14,16 @@ import { IModels } from 'src/app/models/internals/vpic/models.model';
 export class UseBrands {
   private loadingObj = new BehaviorSubject<boolean>(false)
   private brandsObj = new BehaviorSubject<IBrands | undefined>(undefined)
+  private searchCriteriaObj = new BehaviorSubject<number | undefined>(undefined)
 
   public get loading$() {
     return this.loadingObj.asObservable()
   }
   public get brands$() {
     return this.brandsObj.asObservable()
+  }
+  public get searchCriteria$() {
+    return this.searchCriteriaObj.asObservable()
   }
 
   constructor(
@@ -33,41 +37,66 @@ export class UseBrands {
   }
   
   private getStoredBrands(): IBrands|undefined { return this.brandsObj.value}
-  private getStoredBrand(brandId: number): IBrand|undefined { return this.brandsObj.value?.results.filter((brand: IBrand) => { return brand.mfr_ID === brandId})[0]}
-  private getNextPage(): number { return this.getStoredBrands() ? this.getStoredBrands()?.currentPage as number + 1 : 1}
+  private getStoredBrandById(brandId: number): IBrand|undefined { return this.brandsObj.value?.results.filter((brand: IBrand) => { return brand.mfr_ID === brandId})[0]}
+  private getNextBrandPage(): number { return this.getStoredBrands() ? this.getStoredBrands()?.currentPage as number + 1 : 1}
 
-  private fetchFromStore(): Observable<IBrands|undefined> {
+  private getBrandsFromStore(): Observable<IBrands|undefined> {
     return this.brands$.pipe(
       take(1),
     )
   }
   
-  private fetchByIdFromService(brandId: number): Observable<IBrands|undefined> {
-    return this.vpicService.getBrandsById(brandId).pipe(
+  private getBrandsByIdFromService(brandId: number, saveCriteria: boolean): Observable<IBrands|undefined> {
+    return this.vpicService.getBrandsById(brandId, saveCriteria).pipe(
       take(1),
     )
   }
 
-  private fetchFromService(page: number): Observable<IBrands|undefined> {
+  private getBrandsFromService(page: number): Observable<IBrands|undefined> {
     return this.vpicService.getBrands(page).pipe(
       take(1),
     )
   }
 
-  private fetchBrandDetailsfromService(brandId: number): Observable<IModels> {
+  private getBrandDetailsfromService(brandId: number): Observable<IModels> {
     return this.vpicService.getBrandDetails(brandId).pipe(
       take(1),
     )
   }
 
-  public fetchNextBrandsPage(): void {
+  public getNextBrandsPage(shouldAdd: boolean = true): void {
     this.loadingObj.next(true);
+    this.searchCriteriaObj.next(undefined)
 
-    this.fetchFromService(this.getNextPage()).pipe(
+    this.getBrandsFromService(this.getNextBrandPage()).pipe(
+        tap((brands: IBrands|undefined) => {
+          if(brands) {
+            if(shouldAdd) {
+              this.store.dispatch(addBrandsAction(
+                brands
+              ));
+            } else {
+              this.store.dispatch(setBrandsAction(
+                brands
+              ));
+            }
+          }
+      }),
+      finalize(() => {
+        this.loadingObj.next(false);
+      })  
+    ).subscribe()
+  }
+
+  public getFilteredBrandsById(brandId: number): void {
+    this.loadingObj.next(true);
+    this.searchCriteriaObj.next(brandId)
+
+    this.getBrandsByIdFromService(brandId, true).pipe(
         tap((brands: IBrands|undefined) => {
           //save it into storage
           if(brands) {
-            this.store.dispatch(addBrandsAction(
+            this.store.dispatch(setBrandsAction(
               brands
             ));
           }
@@ -82,12 +111,13 @@ export class UseBrands {
     return this.store.select(selectBrandById(brandId))
   }
   
-  public prefetchBrandById(brandId: number): Observable<IBrands | undefined> {
+  public getBrandsById(brandId: number): Observable<IBrands | undefined> { 
     this.loadingObj.next(true)
+    this.searchCriteriaObj.next(undefined)
 
-    return (!!this.getStoredBrand(brandId)
-    ? this.fetchFromStore() 
-    : this.fetchByIdFromService(brandId).pipe(
+    return (!!this.getStoredBrandById(brandId)
+    ? this.getBrandsFromStore() 
+    : this.getBrandsByIdFromService(brandId, false).pipe(
       tap((brands: IBrands | undefined) => {
         //save it into storage
         if(brands) {
@@ -103,12 +133,13 @@ export class UseBrands {
     )
   }
 
-  public prefetchBrands(): Observable<IBrands | undefined> {
+  public getBrands(): Observable<IBrands | undefined> {
     this.loadingObj.next(true)
+    this.searchCriteriaObj.next(undefined)
 
     return (!!this.getStoredBrands()
-    ? this.fetchFromStore() 
-    : this.fetchFromService(this.getNextPage()).pipe(
+    ? this.getBrandsFromStore() 
+    : this.getBrandsFromService(this.getNextBrandPage()).pipe(
       tap((brands: IBrands | undefined) => {
         //save it into storage
         if(brands) {
@@ -124,13 +155,15 @@ export class UseBrands {
     )
   }
 
-  public fetchBrandDetails(brandId: number): Observable<IModels> {
-    const storedBrandDetails = this.getStoredBrand(brandId)?.models;
+  public getBrandDetails(brandId: number): Observable<IModels> {
+    this.loadingObj.next(true)
+
+    const storedBrandDetails = this.getStoredBrandById(brandId)?.models;
 
     return storedBrandDetails ?
       of(storedBrandDetails)
       :
-      this.fetchBrandDetailsfromService(brandId).pipe(
+      this.getBrandDetailsfromService(brandId).pipe(
         tap((brandDetails: IModels) => {
           //save it into storage
           if(brandDetails) {

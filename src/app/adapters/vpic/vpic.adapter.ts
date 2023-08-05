@@ -20,14 +20,14 @@ export class BrandAdapter implements Adapter<IBrand> {
   
 export class BrandsAdapter implements Adapter<IBrands> {
     adapt(
-        {page, brands, results}: 
-        {page: number, brands: BrandsDto, results: IBrand[]}): IBrands {
+        {page, brands, results, searchCriteria}: 
+        {page: number, brands: BrandsDto, results: IBrand[], searchCriteria?: number }): IBrands {
         return new Brands(
             brands.Count,
             page,
             brands.Message,
-            brands.SearchCriteria,
-            results
+            results,
+            searchCriteria,
         )
     }
 }

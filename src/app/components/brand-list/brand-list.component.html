@@ -3,14 +3,14 @@
         <div class="BrandList_Header">
         </div>
         <div class="BrandList_Filter">
-            <app-brand-list-filter></app-brand-list-filter>
+            <app-brand-list-filter [filter]="(useBrands.brands$ | async)?.searchCriteria"></app-brand-list-filter>
         </div>
-
         <div class="BrandList_ContentContainer"
             appIntersectionObserver 
             (isIntersecting)="isIntersecting($event)"
             [offset]="50"
-            [active]="!(useBrands.loading$ | async)">
+            [active]="(!(useBrands.loading$ | async) && !!!(useBrands.searchCriteria$ | async))">
+            <!-- [active]="!!(useBrands.searchCriteria$ | async)"> -->
             <div  class="BrandList_List" 
                 *ngFor="let brand of (useBrands.brands$ | async)?.results"
             >

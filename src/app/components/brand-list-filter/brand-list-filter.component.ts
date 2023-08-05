@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { collapseAnimation } from 'src/app/animations/collapse/collapse.animation';
+import { UseBrands } from 'src/app/hooks/useBrands/useBrands.service';
 
 @Component({
   selector: 'app-brand-list-filter',
@@ -8,9 +9,13 @@ import { collapseAnimation } from 'src/app/animations/collapse/collapse.animatio
   animations: [collapseAnimation]
 })
 export class BrandListFilterComponent {
-  collapsed = true;
+  @Input() public filter!: number | undefined;
 
-  toggle() {
-    this.collapsed = !this.collapsed;
+  constructor(public useBrands: UseBrands) {}
+  collapsed = !!!this.filter;
+  filterBrandId: number | null = this.filter ? this.filter : null;
+
+  search() {
+    return this.useBrands.getFilteredBrandsById(this.filterBrandId as number)
   }
 }

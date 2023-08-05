@@ -5,7 +5,11 @@
     align-items: center;
     background-color: #616161;
     .BrandListFilter_FilterContainer {
+        display: flex;
+        justify-content: center;
+        
         width: 80%;
+        overflow: hidden;
 
     }
     .BrandListFilter_ActionsContainer {

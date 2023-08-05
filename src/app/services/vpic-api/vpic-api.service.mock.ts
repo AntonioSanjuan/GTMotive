@@ -37,7 +37,7 @@ const getBrandsResponseMock: IBrands = {
   count: 5,
   currentPage: 1,
   message: 'messageTest',
-  searchCriteria: 'searchCriteriaTest',
+  searchCriteria: 123,
   results: [
     {
       mfr_ID: 0,

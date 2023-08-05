@@ -8,15 +8,16 @@ export class Brands extends VpicResponse<IBrand> implements IBrands {
         count: number,
         currentPage: number,
         message: string,
-        searchCriteria: string,
-        results: IBrand[]
+        results: IBrand[],
+        searchCriteria?: number,
+
     ) {
         super(
             count,
             currentPage,
             message,
-            searchCriteria,
             results,
+            searchCriteria,
         )
     }
 }
