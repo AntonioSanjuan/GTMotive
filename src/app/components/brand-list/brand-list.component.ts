@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { UseBrands } from 'src/app/hooks/useBrands/useBrands.service';
 
 @Component({
@@ -6,17 +6,13 @@ import { UseBrands } from 'src/app/hooks/useBrands/useBrands.service';
   templateUrl: './brand-list.component.html',
   styleUrls: ['./brand-list.component.scss'],
 })
-export class BrandListComponent implements OnInit {
+export class BrandListComponent {
   constructor(public useBrands: UseBrands) {}
 
   public isIntersecting(intersecting: boolean) {
     if(intersecting) {
+      console.log("epa")
       this.useBrands.getNextBrandsPage()
     }
-  }
-
-  ngOnInit(): void {
-    this.useBrands.searchCriteria$.subscribe((asd) => {
-    })
   }
 }

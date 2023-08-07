@@ -1,5 +1,4 @@
 import { ModelDto } from "../../dtos/vpic/modelDto.model";
-import { ModelsDto } from "../../dtos/vpic/modelsDto.model";
 import { IModel, Model } from "./model.model copy"
 
 export interface IModels {

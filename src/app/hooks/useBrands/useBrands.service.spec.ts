@@ -4,14 +4,13 @@ import { UseBrands } from './useBrands.service';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { AppRootState } from 'src/app/store/store';
 import { selectBrands } from 'src/app/store/data/data.selectors';
-import { first, last, take } from 'rxjs/operators';
+import { take } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { addBrandsAction, setBrandsAction } from 'src/app/store/data/data.actions';
 import { VpicApiService } from 'src/app/services/vpic-api/vpic-api.service';
 import { VpicApiServiceMock } from 'src/app/services/vpic-api/vpic-api.service.mock';
 import { IBrands } from 'src/app/models/internals/vpic/brands.model';
 import { IModels } from 'src/app/models/internals/vpic/models.model';
-import { IBrand } from 'src/app/models/internals/vpic/brand.model';
 
 @Component({})
 class DummyComponent {
@@ -96,7 +95,6 @@ describe('UseBrands', () => {
     } as IBrands;
 
     const getBrandsSpy = jest.spyOn(VpicApiServiceMock, 'getBrands')
-
 
     store.overrideSelector(selectBrands, storedBrands);
     store.refreshState();

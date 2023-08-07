@@ -3,11 +3,23 @@
         <mat-form-field class="example-form-field">
             <mat-label>BrandId</mat-label>
             <input matInput type="number" [(ngModel)]="filterBrandId">
-            <button *ngIf="(useBrands.brands$ | async)?.searchCriteria" matSuffix mat-icon-button aria-label="Clear" (click)="useBrands.getNextBrandsPage(false)">
+            <button *ngIf="(useBrands.brands$ | async)?.searchCriteria" 
+            matSuffix 
+            mat-icon-button 
+            aria-label="Clear" 
+            name="ClearButton"
+            (click)="useBrands.getNextBrandsPage(false)">
               <mat-icon>close</mat-icon>
             </button>
           </mat-form-field>
-          <button [disabled]="filterBrandId === null" matSuffix mat-icon-button aria-label="SearchById" (click)="search()">
+          <button 
+          [disabled]="filterBrandId === null" 
+          matSuffix 
+          mat-icon-button 
+          aria-label="SearchById" 
+          name="SearchByIdButton" 
+
+          (click)="search()">
             <mat-icon>search</mat-icon>
           </button>
     </div>

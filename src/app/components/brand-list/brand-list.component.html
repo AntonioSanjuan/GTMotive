@@ -1,6 +1,8 @@
 <div class="BrandList_MainContainer">
     <div class="BrandList_Container">
         <div class="BrandList_Header">
+            <p>Filter by id</p>
+
         </div>
         <div class="BrandList_Filter">
             <app-brand-list-filter [filter]="(useBrands.brands$ | async)?.searchCriteria"></app-brand-list-filter>

@@ -28,4 +28,22 @@ describe('BrandListComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should not request getNextBrandsPage if is not intersecting', () => {
+    const getNextBrandsPageSpy = jest.spyOn(useBrandsMock, 'getNextBrandsPage')
+
+    component.isIntersecting(false)
+
+    expect(getNextBrandsPageSpy).not.toHaveBeenCalled()
+  });
+
+  it('should request getNextBrandsPage if is intersecting', () => {
+    const getNextBrandsPageSpy = jest.spyOn(useBrandsMock, 'getNextBrandsPage')
+
+    component.isIntersecting(true)
+
+    expect(getNextBrandsPageSpy).toHaveBeenCalled()
+  });
+
+
 });
